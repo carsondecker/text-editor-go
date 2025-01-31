@@ -20,6 +20,10 @@ func getInput(screen tcell.Screen, gb *GapBuffer) {
 			gb.left()
 		case tcell.KeyRight:
 			gb.right()
+		case tcell.KeyUp:
+			gb.up()
+		case tcell.KeyDown:
+			gb.down()
 		case tcell.KeyEscape:
 			fallthrough
 		case tcell.KeyCtrlC:

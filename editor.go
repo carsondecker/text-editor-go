@@ -55,3 +55,37 @@ func (gb *GapBuffer) right() {
 		gb.gapStart++
 	}
 }
+
+func (gb *GapBuffer) up() {
+	gb.move_gap_to_pos(gb.findStartOfLine())
+}
+
+func (gb *GapBuffer) down() {
+	gb.move_gap_to_pos(gb.findEndOfLine())
+}
+
+func (gb *GapBuffer) move_gap_to_pos(pos int) {
+	for gb.gapStart != pos {
+		if gb.gapStart < pos {
+			gb.right()
+		} else {
+			gb.left()
+		}
+	}
+}
+
+func (gb *GapBuffer) findStartOfLine() int {
+	curr := gb.gapStart
+	for curr != 0 && gb.text[curr] != '\r' {
+		curr--
+	}
+	return curr
+}
+
+func (gb *GapBuffer) findEndOfLine() int {
+	curr := gb.gapEnd
+	for curr != len(gb.text) && gb.text[curr-1] != '\r' {
+		curr++
+	}
+	return curr - (gb.gapEnd - gb.gapStart)
+}
