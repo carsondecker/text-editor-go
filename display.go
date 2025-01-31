@@ -35,11 +35,20 @@ func addRune(r rune) {
 }
 
 func backspace() {
-	runeArr = runeArr[:len(runeArr)-1]
+	if len(runeArr) != 0 {
+		runeArr = runeArr[:len(runeArr)-1]
+	}
 }
 
 func draw(screen tcell.Screen) {
-	for i, r := range runeArr {
-		screen.SetContent(i, 0, r, nil, tcell.StyleDefault)
+	row, col := 0, 0
+	for _, r := range runeArr {
+		if r == '\n' || r == '\r' {
+			col++
+			row = 0
+		} else {
+			screen.SetContent(row, col, r, nil, tcell.StyleDefault)
+			row++
+		}
 	}
 }
