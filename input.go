@@ -4,7 +4,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-func getInput(screen tcell.Screen) {
+func getInput(screen tcell.Screen, gb *GapBuffer) {
 	ev := screen.PollEvent()
 
 	switch ev := ev.(type) {
@@ -15,13 +15,17 @@ func getInput(screen tcell.Screen) {
 		case tcell.KeyBackspace:
 			fallthrough
 		case tcell.KeyBackspace2:
-			backspace()
+			gb.backspace()
+		case tcell.KeyLeft:
+			gb.left()
+		case tcell.KeyRight:
+			gb.right()
 		case tcell.KeyEscape:
 			fallthrough
 		case tcell.KeyCtrlC:
 			closeDisplay(screen)
 		default:
-			addRune(ev.Rune())
+			gb.insert(ev.Rune())
 		}
 	}
 }

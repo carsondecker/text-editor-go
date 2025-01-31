@@ -7,8 +7,6 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-var runeArr = []rune{}
-
 func createDisplay() tcell.Screen {
 	defStyle := tcell.StyleDefault.Background(tcell.ColorReset).Foreground(tcell.ColorReset)
 
@@ -30,19 +28,13 @@ func closeDisplay(screen tcell.Screen) {
 	os.Exit(0)
 }
 
-func addRune(r rune) {
-	runeArr = append(runeArr, r)
-}
-
-func backspace() {
-	if len(runeArr) != 0 {
-		runeArr = runeArr[:len(runeArr)-1]
-	}
-}
-
-func draw(screen tcell.Screen) {
+func draw(screen tcell.Screen, text []rune) {
 	row, col := 0, 0
-	for _, r := range runeArr {
+	for _, r := range text {
+		if r == rune(0) {
+			r = '_'
+		}
+
 		if r == '\n' || r == '\r' {
 			col++
 			row = 0
