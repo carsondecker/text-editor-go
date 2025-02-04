@@ -1,6 +1,8 @@
 package main
 
-import "slices"
+import (
+	"slices"
+)
 
 const init_gap_size = 10
 
@@ -71,24 +73,31 @@ func (gb *GapBuffer) right() {
 func (gb *GapBuffer) up() {
 	if gb.getStartOfLine(gb.gapStart) == 0 {
 		gb.moveGapToPos(0)
-		gb.cursorPosOnLine = 0
-		gb.farthestCursorPosOnLine = 0
 		return
 	}
+	startOfPrevLine := gb.getStartOfLine(gb.getStartOfLine(gb.gapStart) - 1)
 	temp := gb.farthestCursorPosOnLine
-	endOfLine := gb.getStartOfLine(gb.gapStart) - 1
-	if endOfLine-gb.getStartOfLine(endOfLine) > gb.farthestCursorPosOnLine {
-		gb.moveGapToPos(gb.getStartOfLine(endOfLine) + gb.farthestCursorPosOnLine)
-		gb.cursorPosOnLine = gb.gapStart - gb.getStartOfLine(gb.gapStart)
+	if gb.getEndOfLine(startOfPrevLine)-startOfPrevLine > gb.farthestCursorPosOnLine {
+		gb.moveGapToPos(startOfPrevLine + gb.farthestCursorPosOnLine)
 	} else {
-		gb.moveGapToPos(gb.getEndOfLine(gb.getStartOfLine(endOfLine)))
-		gb.cursorPosOnLine = gb.gapStart - gb.getStartOfLine(gb.gapStart)
+		gb.moveGapToPos(gb.getEndOfLine(startOfPrevLine))
 	}
 	gb.farthestCursorPosOnLine = temp
 }
 
 func (gb *GapBuffer) down() {
-	gb.moveGapToPos(gb.getEndOfLine(gb.gapStart))
+	if gb.getEndOfLine(gb.gapStart)+(gb.gapEnd-gb.gapStart) == len(gb.text) {
+		gb.moveGapToPos(gb.getEndOfLine(gb.gapStart))
+		return
+	}
+	startOfNextLine := gb.getEndOfLine(gb.gapStart) + 2
+	temp := gb.farthestCursorPosOnLine
+	if gb.getEndOfLine(startOfNextLine)-startOfNextLine >= gb.farthestCursorPosOnLine {
+		gb.moveGapToPos(startOfNextLine + gb.farthestCursorPosOnLine - 1)
+	} else {
+		gb.moveGapToPos(gb.getEndOfLine(startOfNextLine))
+	}
+	gb.farthestCursorPosOnLine = temp
 }
 
 func (gb *GapBuffer) moveGapToPos(pos int) {
@@ -110,15 +119,15 @@ func (gb *GapBuffer) getStartOfLine(pos int) int {
 }
 
 func (gb *GapBuffer) getEndOfLine(pos int) int {
-	if pos >= len(gb.text)-1 {
-		return pos
+	if len(gb.text) == 0 {
+		return 0
 	}
 	curr := pos
-	for curr != len(gb.text)-1 && gb.text[curr] != '\r' {
+	for curr != len(gb.text) && gb.text[curr] != '\r' {
 		curr++
 	}
-	if curr >= gb.gapEnd {
-		return curr - gb.gapEnd - gb.gapStart
+	if curr == len(gb.text)-1 || curr >= gb.gapEnd {
+		return curr - (gb.gapEnd - gb.gapStart)
 	}
 	return curr
 }
