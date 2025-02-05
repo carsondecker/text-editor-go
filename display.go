@@ -31,13 +31,11 @@ func closeDisplay(screen tcell.Screen) {
 func draw(screen tcell.Screen, text []rune) {
 	row, col := 0, 0
 	for _, r := range text {
-		if r == rune(0) {
-			r = '_'
-		}
-
 		if r == '\n' || r == '\r' {
 			col++
 			row = 0
+		} else if r == rune(0) {
+			screen.ShowCursor(row, col)
 		} else {
 			screen.SetContent(row, col, r, nil, tcell.StyleDefault)
 			row++

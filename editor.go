@@ -90,14 +90,14 @@ func (gb *GapBuffer) down() {
 		gb.moveGapToPos(gb.getEndOfLine(gb.gapStart))
 		return
 	}
-	startOfNextLine := gb.getEndOfLine(gb.gapStart) + 2
-	temp := gb.farthestCursorPosOnLine
-	if gb.getEndOfLine(startOfNextLine)-startOfNextLine >= gb.farthestCursorPosOnLine {
-		gb.moveGapToPos(startOfNextLine + gb.farthestCursorPosOnLine - 1)
+	farthestPosOnLine := gb.farthestCursorPosOnLine
+	gb.moveGapToPos(gb.getEndOfLine(gb.gapStart) + 1)
+	if gb.gapStart+farthestPosOnLine >= gb.getEndOfLine(gb.gapStart) {
+		gb.moveGapToPos(gb.getEndOfLine(gb.gapStart))
 	} else {
-		gb.moveGapToPos(gb.getEndOfLine(startOfNextLine))
+		gb.moveGapToPos(gb.gapStart + farthestPosOnLine)
 	}
-	gb.farthestCursorPosOnLine = temp
+	gb.farthestCursorPosOnLine = farthestPosOnLine
 }
 
 func (gb *GapBuffer) moveGapToPos(pos int) {
@@ -119,14 +119,22 @@ func (gb *GapBuffer) getStartOfLine(pos int) int {
 }
 
 func (gb *GapBuffer) getEndOfLine(pos int) int {
-	if len(gb.text) == 0 {
+	curr := pos
+	if len(gb.text) <= 1 {
 		return 0
 	}
-	curr := pos
+	if curr >= len(gb.text)-1 {
+		return len(gb.text) - 1
+	}
+
+	if gb.text[curr] == '\r' && gb.text[curr+1] != '\r' {
+		curr++
+	}
+
 	for curr != len(gb.text) && gb.text[curr] != '\r' {
 		curr++
 	}
-	if curr == len(gb.text)-1 || curr >= gb.gapEnd {
+	if curr >= gb.gapEnd {
 		return curr - (gb.gapEnd - gb.gapStart)
 	}
 	return curr

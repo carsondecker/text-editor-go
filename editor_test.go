@@ -114,6 +114,33 @@ func TestGetEndOfLine(t *testing.T) {
 			input:    1,
 			expected: 3,
 		},
+		{
+			gapBuffer: GapBuffer{
+				text:     []rune{'\r', '\r'},
+				gapStart: 0,
+				gapEnd:   0,
+			},
+			input:    0,
+			expected: 0,
+		},
+		{
+			gapBuffer: GapBuffer{
+				text:     []rune{rune(0), rune(0), rune(0), '\r', '\r'},
+				gapStart: 0,
+				gapEnd:   3,
+			},
+			input:    0,
+			expected: 0,
+		},
+		{
+			gapBuffer: GapBuffer{
+				text:     []rune{rune(0), rune(0), rune(0), 'a', 's', 'd', 'f', '\r', '\r'},
+				gapStart: 0,
+				gapEnd:   3,
+			},
+			input:    0,
+			expected: 4,
+		},
 	}
 
 	for _, c := range cases {
