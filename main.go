@@ -11,7 +11,7 @@ func main() {
 		}
 	}()
 
-	gb := newGapBuffer()
+	gb := newGapBuffer(readFile(getPath()))
 	for {
 		screen.Show()
 		getInput(screen, gb)

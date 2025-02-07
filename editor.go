@@ -14,9 +14,9 @@ type GapBuffer struct {
 	farthestCursorPosOnLine int
 }
 
-func newGapBuffer() *GapBuffer {
+func newGapBuffer(text []rune) *GapBuffer {
 	return &GapBuffer{
-		text:                    []rune{},
+		text:                    text,
 		gapStart:                0,
 		gapEnd:                  0,
 		cursorPosOnLine:         0,
