@@ -1,6 +1,9 @@
 package main
 
 func main() {
+	path := getPath()
+	gb := newGapBuffer(readFile(path))
+
 	screen := createDisplay()
 	// Close screen on error
 	defer func() {
@@ -11,8 +14,6 @@ func main() {
 		}
 	}()
 
-	path := getPath()
-	gb := newGapBuffer(readFile(path))
 	for {
 		screen.Show()
 		getInput(screen, path, gb)
