@@ -8,5 +8,5 @@ CTRL-S - Save
 CTRL-C - Close
 
 ## Running the editor
-**Windows x64**: Download and run the "text-editor-go.exe" file.
-**Ubuntu**: Download and run the "text-editor-go" file.
+- **Windows x64**: Download and run the "text-editor-go.exe" file.
+- **Ubuntu**: Download and run the "text-editor-go" file.
