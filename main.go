@@ -11,10 +11,11 @@ func main() {
 		}
 	}()
 
-	gb := newGapBuffer(readFile(getPath()))
+	path := getPath()
+	gb := newGapBuffer(readFile(path))
 	for {
 		screen.Show()
-		getInput(screen, gb)
+		getInput(screen, path, gb)
 		screen.Clear()
 		draw(screen, gb.text)
 	}

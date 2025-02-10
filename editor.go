@@ -24,10 +24,14 @@ func newGapBuffer(text []rune) *GapBuffer {
 	}
 }
 
-func (gb *GapBuffer) insert(r rune) {
+func (gb *GapBuffer) checkForGap() {
 	if gb.gapEnd-gb.gapStart <= 1 {
 		gb.grow()
 	}
+}
+
+func (gb *GapBuffer) insert(r rune) {
+	gb.checkForGap()
 	gb.text[gb.gapStart] = r
 	gb.gapStart++
 	gb.cursorPosOnLine = gb.gapStart - gb.getStartOfLine(gb.gapStart)
@@ -49,6 +53,7 @@ func (gb *GapBuffer) backspace() {
 }
 
 func (gb *GapBuffer) left() {
+	gb.checkForGap()
 	if gb.gapStart != 0 {
 		gb.gapStart--
 		gb.gapEnd--
@@ -60,6 +65,7 @@ func (gb *GapBuffer) left() {
 }
 
 func (gb *GapBuffer) right() {
+	gb.checkForGap()
 	if gb.gapEnd != len(gb.text) {
 		gb.gapEnd++
 		gb.text[gb.gapStart] = gb.text[gb.gapEnd-1]
@@ -71,6 +77,7 @@ func (gb *GapBuffer) right() {
 }
 
 func (gb *GapBuffer) up() {
+	gb.checkForGap()
 	if gb.getStartOfLine(gb.gapStart) == 0 {
 		gb.moveGapToPos(0)
 		return
@@ -86,6 +93,7 @@ func (gb *GapBuffer) up() {
 }
 
 func (gb *GapBuffer) down() {
+	gb.checkForGap()
 	if gb.getEndOfLine(gb.gapStart)+(gb.gapEnd-gb.gapStart) == len(gb.text) {
 		gb.moveGapToPos(gb.getEndOfLine(gb.gapStart))
 		return

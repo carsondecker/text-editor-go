@@ -4,7 +4,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 )
 
-func getInput(screen tcell.Screen, gb *GapBuffer) {
+func getInput(screen tcell.Screen, path string, gb *GapBuffer) {
 	ev := screen.PollEvent()
 
 	switch ev := ev.(type) {
@@ -28,6 +28,8 @@ func getInput(screen tcell.Screen, gb *GapBuffer) {
 			fallthrough
 		case tcell.KeyCtrlC:
 			closeDisplay(screen)
+		case tcell.KeyCtrlS:
+			gb.saveFile(path)
 		default:
 			gb.insert(ev.Rune())
 		}
